@@ -12,13 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tagihans', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('pelanggan_id')->constrained('pelanggans')->onDelete('cascade');
-        $table->date('tanggal_tagihan');
-        $table->integer('jumlah');
-        $table->string('status')->default('Belum Lunas'); // status: Belum Lunas / Lunas
-        $table->timestamps();
-        });
+            $table->id('ID_Tagihan');
+            $table->unsignedBigInteger('ID_Pelanggan');
+            
+            $table->date('Tanggal');
+            $table->integer('Jumlah');
+            $table->string('Status', 20);
+
+            $table->foreign('ID_Pelanggan')->references('ID_Pelanggan')->on('pelanggans')->onDelete('cascade');
+            });
     }
 
     /**
