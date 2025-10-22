@@ -10,17 +10,19 @@ class Notifikasi extends Model
   use HasFactory;
 
   protected $table = 'notifikasi';
-  protected $primaryKey = 'Notifikasi_id';
+  protected $primaryKey = 'notifikasi_id';
   public $timestamps = false;
 
   protected $fillable = [
-    'User_id',
+    'user_id',
     'Isi_pesan',
-    'Tanggal_kirim'
+    'Tanggal_kirim',
+    'tipe',
+    'status_baca'
   ];
 
   public function user()
   {
-    return $this->belongTo(User::class, 'User_id');
+    return $this->belongTo(User::class, 'user_id');
   }
 }

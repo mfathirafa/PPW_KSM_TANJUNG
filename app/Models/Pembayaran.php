@@ -9,24 +9,24 @@ class Pembayaran extends Model
 {
   use HasFactory;
   protected $table = 'pembayarans';
-  protected $primaryKey = 'ID_Pembayaran';
+  protected $primaryKey = 'id_pembayaran';
   public $timestamps = false;
 
   protected $fillable = [
-    'ID_Tagihan',
-    'ID_Admin',
-    'Tanggal',
-    'Jumlah_Bayar',
-    'Metode'
+    'id_tagihan',
+    'user_id',
+    'tanggal',
+    'jumlah_Bayar',
+    'metode'
   ];
 
   public function tagihan()
   {
-    return $this->belongsTo(Tagihan::class, 'ID_Tagihan');
+    return $this->belongsTo(Tagihan::class, 'id_tagihan');
   }
 
-  public function admin()
+  public function user()
   {
-    return $this->belongsTo(Admin::class, 'ID_Admin');
+    return $this->belongsTo(User::class, 'user_id');
   }
 }

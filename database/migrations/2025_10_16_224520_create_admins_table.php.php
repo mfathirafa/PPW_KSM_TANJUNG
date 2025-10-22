@@ -9,13 +9,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('admins', function (Blueprint $table) {
-            $table->id('ID_Admin');
-
-            $table->string('Nama', 100);
-            $table->string('Username', 50);
-            $table->string('Password', 100);
+            $table->id('id_admin');
+            $table->unsignedBigInteger('user_id');
+            $table->string('nama', 100);
+            $table->string('username', 50);
+            $table->string('password', 100);
             $table->timestamps();
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
+
     }
 
     public function down(): void

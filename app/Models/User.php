@@ -10,23 +10,35 @@ class User extends Model
     use HasFactory;
 
     protected $table = 'users';
-    protected $primaryKey = 'ID_User';
+    protected $primaryKey = 'user_id';
     public $timestamps = true;
 
     protected $fillable = [
-        'Nama',
-        'Email',
-        'Password',
-        'Role'
+        'nama',
+        'email',
+        'password',
+        'role'
     ];
 
     // 1 user bisa punya banyak notifikasi
+    public function admin()
+    {
+        return $this->hasOne(Admin::class, 'user_id');
+    }
+    public function pelanggan()
+    {
+        return $this->hasOne(Pelanggan::class, 'user_id');
+    }
     public function notifikasi()
     {
-        return $this->hasMany(Notifikasi::class, 'ID_User');
+        return $this->hasMany(Notifikasi::class, 'user_id');
     }
     public function laporan_keuangan()
     {
-        return $this->hasMany(Laporan_Keuangan::class, 'ID_User');
+        return $this->hasMany(Laporan_Keuangan::class, 'user_id');
+    }
+    public function pembayaran()
+    {
+        return $this->hasMany(Pembayaran::class, 'user_id');
     }
 }

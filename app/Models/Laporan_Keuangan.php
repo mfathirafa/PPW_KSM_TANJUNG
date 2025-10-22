@@ -10,13 +10,14 @@ class Laporan_Keuangan extends Model
   use HasFactory;
   
   protected $table = 'laporan_keuangan';
-  protected $primaryKey = 'Laporan_id';
+  protected $primaryKey = 'id_laporan';
   public $timestamps = false;
 
   protected $fillable = [
-    'Tanggal_laporan',
-    'Total_pemasukan',
-    'Total_pengeluaran'
+    'user_id',
+    'tanggal_laporan',
+    'total_pemasukan',
+    'total_pengeluaran'
   ];
 
   public function user()

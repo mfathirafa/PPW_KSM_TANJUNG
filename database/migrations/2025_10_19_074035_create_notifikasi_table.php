@@ -11,17 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notifikasi', function (Blueprint $table) {
-            $table->id('Notifikasi_id');
-            $table->unsignedBigInteger('User_id');
-            
-            $table->string('Isi_pesan', 255);
-            $table->date('Tanggal_kirim');
-            $table->string('Tipe', 50);
-            $table->string('Status_baca', 10);
+        Schema::create('notifikasis', function (Blueprint $table) {
+            $table->id('id_notifikasi');
+            $table->unsignedBigInteger('user_id');
 
-            $table->foreign('User_id')->references('User_id')->on('users')->onDelete('cascade');
+            $table->string('isi_pesan', 255);
+            $table->date('tanggal_kirim');
+            $table->string('tipe', 50);
+            $table->string('status_baca', 10);
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
+
     }
 
     /**
