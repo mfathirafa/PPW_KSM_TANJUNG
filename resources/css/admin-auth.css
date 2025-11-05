@@ -1,0 +1,113 @@
+.login-v3-bg {
+    background-color: #34D399; /* Latar hijau utama */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+/* Panel Kiri (Putih) */
+.login-v3-left-panel {
+    background: white;
+    padding: 3rem;
+    border-radius: 1.5rem;
+    border-top-right-radius: 150px;
+    border-bottom-right-radius: 150px;
+    box-shadow: -10px 10px 30px rgba(0,0,0,0.1);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 550px;
+}
+
+.login-v3-left-panel .logo {
+    width: 150px;
+    margin-bottom: 2rem;
+}
+
+.login-v3-left-panel h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* Panel Kanan (Form) */
+.login-v3-right-panel {
+    padding: 2rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 550px;
+    z-index: 1;
+}
+
+/* Input di panel kanan */
+.login-v3-right-panel .login-input-group {
+    background-color: white;
+    border-radius: 50px;
+    padding: 0.5rem 1.25rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.login-v3-right-panel .login-input-group i {
+    color: #6c757d;
+}
+.login-v3-right-panel .login-input-group .form-control {
+    border: none;
+    box-shadow: none;
+    padding-left: 0.75rem;
+}
+
+/* Tombol Hijau Muda */
+.btn-light-green {
+    background-color: #BFFFCA;
+    border: none;
+    border-radius: 50px;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    color: #0f5132;
+    width: 100%;
+}
+.btn-light-green:hover {
+    background-color: #a8eec0;
+    color: #0f5132;
+}
+
+/* Label Radio Button */
+.login-v3-right-panel .form-check-label {
+    color: white;
+    font-weight: 500;
+}
+.login-v3-right-panel .form-check-input:checked {
+    background-color: #BFFFCA;
+    border-color: #BFFFCA;
+}
+
+.btn-custom-green {
+    background-color: #34D399; /* Warna hijau tema kita */
+    border-color: #34D399;
+    color: white;
+}
+
+.btn-custom-green:hover {
+    background-color: #2aa87c; /* Warna hijau sedikit lebih gelap saat disentuh */
+    border-color: #2aa87c;
+    color: white;
+}
+
+/* Responsif */
+@media (max-width: 767px) {
+    .login-v3-left-panel {
+        border-radius: 1.5rem;
+        margin-bottom: 2rem;
+        min-height: 0;
+    }
+    .login-v3-right-panel {
+        padding: 0;
+        min-height: 0;
+    }
+}

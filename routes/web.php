@@ -1,18 +1,50 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PelangganController;
 
-Route::get('/', function () {
-    return view('welcome');
+
+Route::get('/admin/login', function () {
+    return view('admin.auth.login');
 });
 
-Route::get('/tentang', function () {
-    return "Ini halaman KSM Tanjung";
+Route::get('/admin/register', function () {
+    return view('admin.auth.register');
 });
 
-Route::get('/contact', function() {
-    return "Silahkan hubungi kami di +62-812-345-678";
+Route::get('/admin/whatsapp-login', function () {
+    return view('admin.auth.whatsapp-login');
 });
 
-Route::resource('pelanggans', PelangganController::class);
+Route::get('/admin/verify-code', function () {
+    return view('admin.auth.verify-code');
+});
+
+Route::get('/admin/dashboard', function () {
+    return view('admin.dashboard');
+});
+
+Route::get('/admin/customers', function () {
+    return view('admin.customers.index');
+});
+
+Route::get('/admin/reports/finance', function () {
+    return view('admin.reports.finance');
+});
+
+Route::get('/admin/confirmations', function () {
+    return view('admin.confirmations.index');
+});
+
+Route::get('/admin/settings', function () {
+    return view('admin.settings.index');
+});
+
+Route::get('/admin/history', function () {
+    return view('admin.history.index');
+});
+
+
+
+Route::get('/dashboard', function () {
+    return view('user.dashboard');
+});

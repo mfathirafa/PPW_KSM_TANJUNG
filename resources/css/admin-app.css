@@ -1,0 +1,341 @@
+body {
+    background-color: #f0f2f5;
+}
+
+/* --- Sidebar --- */
+.sidebar {
+    width: 260px;
+    min-height: 100vh;
+    background-color: #34D399;
+    color: white;
+    padding: 1rem;
+    border-bottom-right-radius: 25px;
+}
+
+.sidebar-nav .nav-item .nav-link {
+    color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.sidebar-nav .nav-item .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-nav .nav-item .nav-link.active {
+    background-color: white;
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+.sidebar-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-logo {
+    height: 100px;
+    width: auto;
+}
+
+.sidebar, .main-content {
+    transition: all 0.3s ease-in-out;
+}
+
+.sidebar.collapsed {
+    margin-left: -260px;
+}
+
+/* State ketika konten utama melebar penuh */
+.main-content.expanded {
+    width: 100%;
+    margin-left: 0;
+}
+
+.sidebar-toggle-btn {
+    cursor: pointer;
+}
+
+.main-content {
+    width: calc(100% - 260px);
+}
+
+.main-header {
+    background-color: white;
+}
+
+.page-header {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.data-table-header {
+    background-color: #34D399;
+    color: white;
+    border-radius: 0.5rem;
+}
+
+/* --- Custom Status Badges --- */
+.badge.bg-lunas { background-color: #198754; }
+.badge.bg-belum-lunas { background-color: #ffc107; color: black !important; }
+.badge.bg-terlambat { background-color: #dc3545; }
+
+.action-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 0.5rem;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-btn.btn-edit {
+    background-color: #ffc107;
+}
+
+.action-btn.btn-delete {
+    background-color: #dc3545;
+}
+
+.action-btn.btn-history {
+    background-color: #0d6efd;
+}
+
+
+/* --- Dashboard Page --- */
+.summary-card {
+    border: none;
+    border-left: 5px solid #34D399;
+}
+.summary-card .sub-link {
+    font-size: 0.9rem;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* --- Customer Page --- */
+.customer-card {
+    background-color: #D1FAE5;
+    border: 2px solid #34D399;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.customer-card .avatar {
+    width: 50px;
+    height: 50px;
+    background-color: #34D399;
+    color: white;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.customer-card .status-badge {
+    background-color: #34D399;
+    color: white;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.8rem;
+}
+
+.modal-add-customer .modal-content {
+    background-color: #D1FAE5;
+    border-radius: 1rem;
+    border: none;
+}
+
+.modal-add-customer .form-control {
+    border-radius: 50px;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid #ced4da;
+}
+
+.modal-add-customer .btn-cancel {
+    background-color: white;
+    border: 1px solid #ced4da;
+    border-radius: 50px;
+    padding: 0.75rem 1.25rem;
+    font-weight: bold;
+}
+
+.modal-add-customer .btn-simpan {
+    background-color: #00FF00;
+    border: none;
+    border-radius: 50px;
+    padding: 0.75rem 1.25rem;
+    font-weight: bold;
+    color: black;
+}
+
+/* --- Reports Page --- */
+.report-card {
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+}
+
+.report-card.border-success {
+    border-left: 5px solid #198754;
+}
+
+.report-card.border-warning {
+    border-left: 5px solid #bddc35;
+}
+
+.report-card.border-danger {
+    border-left: 5px solid #dc3545;
+}
+
+.chart-container {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+}
+
+.btn-cetak {
+    background-color: #34D399;
+    color: white;
+    font-size: 0.8rem;
+    padding: 0.2rem 0.6rem;
+}
+
+.modal-report-options .modal-content {
+    background-color: #D1FAE5;
+    border-radius: 1rem;
+    border: none;
+}
+
+.modal-report-options .form-control,
+.modal-report-options .form-check-input {
+    border-radius: 0.5rem;
+    border: 1px solid #ced4da;
+}
+
+.modal-report-options .btn-cancel {
+    background-color: white;
+    border: 1px solid #ced4da;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1.5rem;
+    font-weight: bold;
+}
+
+.modal-report-options .btn-action {
+    background-color: #34D399;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+/* --- Confirmation Page --- */
+.filter-box {
+    background-color: #D1FAE5;
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+.confirmation-card {
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+.confirmation-card .status-badge {
+    background-color: #ffc107;
+    color: black;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.8rem;
+}
+
+.confirmation-card .method-badge {
+    background-color: #e9ecef;
+    color: #495057;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.8rem;
+}
+
+.confirmation-card .btn-action {
+    border: none;
+    border-radius: 50px;
+    padding: 0.5rem 2rem;
+    color: white;
+    font-weight: bold;
+}
+
+.confirmation-card .btn-terima {
+    background-color: #198754;
+}
+
+.confirmation-card .btn-tolak {
+    background-color: #dc3545;
+}
+
+/* --- Settings Page --- */
+.settings-container {
+    background-color: #D1FAE5;
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+.settings-container .setting-item {
+    margin-bottom: 1.5rem;
+}
+
+.form-switch .form-check-input {
+    width: 3.5em;
+    height: 1.8em;
+    cursor: pointer;
+}
+
+/* --- History Page --- */
+.btn-new-bill {
+    background-color: #198754;
+    border: none;
+    color: white;
+    font-weight: bold;
+}
+
+.btn-new-bill:hover {
+    background-color: #00e600;
+    color: black;
+}
+
+.bill-card {
+    background-color: #D1FAE5;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.bill-card .bill-id {
+    color: #0f5132;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.bill-card .bill-due-date {
+    font-size: 0.9rem;
+}
+
+.bill-card .bill-amount {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.bill-card .status-badge {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.9rem;
+}
