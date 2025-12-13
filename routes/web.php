@@ -44,7 +44,19 @@ Route::get('/admin/history', function () {
 });
 
 
-
 Route::get('/dashboard', function () {
     return view('user.dashboard');
+});
+
+Route::get('/bills', function () {
+    return view('user.bills.index');
+});
+
+Route::get('/history', function () {
+    return view('user.history.index'); 
+});
+
+// Route untuk Halaman Profil
+Route::get('/profile', function () {
+    return view('user.profile.index'); 
 });
