@@ -12,21 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pembayarans', function (Blueprint $table) {
-            $table->id('id_pembayaran');
-            $table->unsignedBigInteger('tagihan_id');
-            $table->unsignedBigInteger('admin_id');
-            $table->unsignedBigInteger('user_id');
-
-
-            $table->date('tanggal');
-            $table->integer('jumlah_bayar');
-            $table->string('metode', 20);
+            $table->id();
+            $table->foreignId('tagihan_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->enum('method', ['qris', 'transfer']);
+            $table->string('bukti'); // path file
+            $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
+            $table->string('catatan_admin')->nullable();
             $table->timestamps();
-
-            $table->foreign('tagihan_id')->references('id_tagihan')->on('tagihans')->onDelete('cascade');
-            $table->foreign('admin_id')->references('id_admin')->on('admins')->onDelete('cascade');
-             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
+
 
     }
 

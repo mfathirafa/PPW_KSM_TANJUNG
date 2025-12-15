@@ -12,15 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pelanggans', function (Blueprint $table) {
-            $table->id('id_pelanggan');
-            $table->unsignedBigInteger('user_id');
-
-            $table->string('nama', 200);
-            $table->string('alamat', 255);
-            $table->string('no_hp', 15);
+            $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('alamat', 255)->nullable();
             $table->timestamps();
-
-            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
 
     }
