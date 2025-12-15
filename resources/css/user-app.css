@@ -1,25 +1,15 @@
-/*
- * File: resources/css/user-app.css
- * Deskripsi: Styling utama untuk seluruh sisi pelanggan/user.
- * REVISI: Diubah menjadi mode WEB FULL-WIDTH.
- */
-
 body {
-    background-color: #f0f2f5; /* Latar belakang kita samakan dengan admin agar konsisten */
+    background-color: #f0f2f5;
 }
-
-/* * KITA HAPUS .user-wrapper YANG MEMBATASI LEBARNYA.
- * Sekarang layout akan dikontrol oleh header, content, dan footer.
-*/
 
 /* --- Header Pengguna --- */
 .user-header {
-    background-color: #34D399; /* Warna hijau tema */
-    padding: 1rem 2rem; /* Padding horizontal lebih banyak */
+    background-color: #34D399; /* Warna hijau tema header */
+    padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Tambah bayangan */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .user-header .logo {
@@ -49,15 +39,14 @@ body {
 /* --- Konten Utama --- */
 .user-content {
     background-color: white;
-    /* Kita atur agar konten berada di tengah seperti di admin */
-    max-width: 1140px; /* Lebar konten standar */
-    margin: 2rem auto; /* Otomatis ke tengah */
+    max-width: 1140px;
+    margin: 2rem auto;
     padding: 2rem;
     border-radius: 1rem;
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
 
-/* --- Kartu Informasi --- */
+/* --- Kartu Informasi (Dashboard Lama) --- */
 .info-card {
     border-radius: 0.75rem;
     border: 1px solid #34D399;
@@ -113,9 +102,9 @@ body {
 
 /* --- Footer Pengguna --- */
 .user-footer {
-    background-color: #0f5132; /* Hijau sangat tua */
+    background-color: #0f5132;
     color: white;
-    padding: 2rem; /* Padding lebih besar */
+    padding: 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -132,4 +121,660 @@ body {
 .user-footer .contact-info p {
     margin: 0;
     font-weight: bold;
+}
+
+
+/*STYLING UNTUK HALAMAN TAGIHAN*/
+.bill-card-neon {
+    background-color: #00e600; /* Warna Hijau Neon */
+    border-radius: 1.5rem;
+    padding: 2rem 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+/* Judul Pill Putih */
+.bill-title-pill {
+    background-color: white;
+    color: black;
+    font-weight: bold;
+    padding: 0.5rem 2rem;
+    border-radius: 50px;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    font-size: 1rem;
+}
+
+/* Baris Input Putih */
+.bill-input-row {
+    margin-bottom: 0.8rem;
+    display: flex;
+}
+
+/* Label Input (Kiri) */
+.bill-input-row .input-group-text {
+    background-color: white;
+    border: none;
+    border-radius: 0.4rem 0 0 0.4rem;
+    font-weight: 500;
+    min-width: 100px;
+    text-align: left;
+}
+
+/* Value Input (Kanan) */
+.bill-input-row .form-control {
+    background-color: white;
+    border: none;
+    border-radius: 0 0.4rem 0.4rem 0;
+    text-align: right;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Badge Status dalam Input */
+.bill-input-row .status-badge {
+    background-color: white; /* Base putih */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 1rem;
+    flex-grow: 1;
+    border-radius: 0 0.4rem 0.4rem 0;
+}
+.bill-input-row .status-badge span {
+    padding: 0.2rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+.bg-status-yellow { background-color: #ffc107; color: black; }
+.bg-status-red { background-color: #ff0000; color: white; }
+
+/* Tombol Bayar Putih */
+.btn-pay-white {
+    background-color: white;
+    color: black;
+    border: none;
+    border-radius: 50px;
+    padding: 0.5rem 2rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    margin-top: 1rem;
+}
+.btn-pay-white:hover {
+    background-color: #f8f9fa;
+}
+
+/* Tombol Bayar Gelap (Hijau Tua) */
+.btn-pay-dark {
+    background-color: #198754; /* Bootstrap success darker */
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 0.4rem 1.5rem;
+    font-weight: bold;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+.btn-pay-dark:hover {
+    background-color: #146c43;
+    color: white;
+}
+
+/*
+ * =========================================
+ * STYLING VIEW PEMBAYARAN (CHECKOUT)
+ * =========================================
+ */
+
+/* Kartu Hijau Kiri (Rincian) */
+.payment-details-card {
+    background-color: #00e600; /* Hijau Neon */
+    border-radius: 1rem;
+    padding: 1.5rem;
+    height: 100%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Kartu Putih Kanan (Metode Pembayaran) */
+.payment-methods-card {
+    background-color: white;
+    border: 2px solid #00e600; /* Border Hijau Neon */
+    border-radius: 1rem;
+    padding: 1.5rem;
+    height: 100%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tombol Pilihan Metode Pembayaran */
+.payment-option-label {
+    background-color: #00e600;
+    border-radius: 0.5rem;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: transform 0.1s;
+    font-weight: bold;
+    color: black;
+    border: 2px solid transparent;
+}
+
+.payment-option-label:hover {
+    transform: scale(1.02);
+}
+
+/* Menyembunyikan radio button asli */
+.payment-option-input {
+    display: none;
+}
+
+/* Lingkaran Radio Custom (Putih) */
+.custom-radio-circle {
+    width: 24px;
+    height: 24px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Efek saat dipilih */
+.payment-option-input:checked + .payment-option-label {
+    background-color: #00cc00; /* Hijau sedikit lebih gelap */
+    border: 2px solid #006400; /* Border hijau tua */
+}
+
+/* Indikator terpilih di dalam lingkaran */
+.payment-option-input:checked + .payment-option-label .custom-radio-circle::after {
+    content: "";
+    width: 12px;
+    height: 12px;
+    background-color: #00e600;
+    border-radius: 50%;
+    display: block;
+}
+
+/* Ikon Metode Pembayaran */
+.payment-icon {
+    width: 30px;
+    text-align: center;
+    margin-right: 10px;
+    font-size: 1.1rem;
+}
+
+/* --- CUSTOM MODAL KONFIRMASI (Overlay Gelap) --- */
+.custom-modal-overlay {
+    display: none; /* Sembunyi default */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1055; /* Di atas navbar/bootstrap modal */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Kotak Putih Modal */
+.custom-modal-box {
+    background-color: white;
+    width: 90%;
+    max-width: 380px;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+    animation: slideDown 0.3s ease-out;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Header Modal */
+.custom-modal-header {
+    text-align: center;
+    margin-bottom: 5px;
+    position: relative;
+}
+
+/* Tombol Close (X) */
+.custom-close-btn {
+    position: absolute;
+    right: 0; top: -5px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid #000;
+    border-radius: 50%;
+    width: 26px; height: 26px;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+}
+
+.custom-modal-body { margin-top: 20px; }
+
+/* Baris Data (Kiri Kanan) */
+.data-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #333;
+}
+
+.data-label { color: #555; }
+.data-value { font-weight: bold; text-align: right;}
+
+/* Tombol Hijau Besar */
+.btn-confirm-green {
+    width: 100%;
+    padding: 12px;
+    background-color: #32CD32; /* Hijau gambar */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: 0.2s;
+}
+
+.btn-confirm-green:hover { background-color: #28a428; }
+
+/* --- STYLE KHUSUS MODAL QRIS --- */
+
+/* Kotak Modal Lebih Lebar */
+.modal-box-wide {
+    background-color: white;
+    width: 95%;
+    max-width: 650px; /* Lebih lebar dari konfirmasi */
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+    font-family: 'Segoe UI', sans-serif;
+    animation: slideDown 0.3s ease-out;
+}
+
+/* Header Judul Tengah */
+.qris-header-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+/* Layout 2 Kolom (Kiri & Kanan) */
+.qris-layout {
+    display: flex;
+    flex-wrap: wrap; /* Agar responsif di HP */
+    gap: 20px;
+}
+
+.qris-left, .qris-right {
+    flex: 1;
+    min-width: 250px; /* Supaya tidak gepeng di HP */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Bagian Kiri: Timer */
+.timer-text-label {
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 15px;
+    color: #000;
+}
+
+.timer-circle {
+    width: 120px;
+    height: 120px;
+    background-color: #4CAF50; /* Hijau sesuai gambar */
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+}
+
+.timer-time {
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.timer-unit {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Kotak Jumlah Tagihan Kecil */
+.amount-box {
+    background: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 14px;
+    border-left: 4px solid #333; /* Aksen garis kecil di kiri */
+}
+
+/* Bagian Kanan: QR & Tombol */
+.qr-image {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    margin-bottom: 15px;
+    /* Placeholder border kalau gambarnya belum ada */
+    border: 1px dashed #ccc; 
+}
+
+.qris-actions {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+}
+
+/* Tombol Unduh & Bagikan */
+.btn-qris-outline {
+    border: 1px solid #ccc;
+    background: white;
+    color: #333;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 5px;
+}
+
+.btn-qris-green {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 5px;
+}
+
+.btn-qris-green:hover { background: #45a049; }
+
+/* --- HALAMAN RIWAYAT PEMBAYARAN --- */
+
+/* Judul Halaman */
+.page-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    color: #000;
+}
+
+/* Filter Section */
+.filter-container {
+    margin-bottom: 30px;
+}
+
+.filter-select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #333; /* Border hitam tipis sesuai gambar */
+    border-radius: 8px;
+    background-color: white;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    cursor: pointer;
+    /* Panah dropdown custom bisa ditambahkan di sini jika perlu */
+}
+
+/* Grid Kartu Riwayat */
+.history-card {
+    background: white;
+    border: 1px solid #888; /* Border agak tebal abu tua */
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    /* Agar tinggi kartu sama rata */
+    height: 100%; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Header Kartu (No Tagihan & Badge) */
+.card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+
+.bill-number {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+}
+
+/* Tanggal */
+.bill-date {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Badge Status */
+.badge-status {
+    padding: 5px 15px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.badge-confirmed {
+    background-color: #d1fae5; /* Hijau muda background */
+    color: #065f46; /* Hijau tua text */
+}
+
+.badge-pending {
+    background-color: #fef9c3; /* Kuning muda background */
+    color: #854d0e; /* Coklat/Kuning tua text */
+}
+
+/* Footer Kartu (Metode & Harga) */
+.card-footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.payment-method {
+    font-weight: bold;
+    font-size: 16px;
+    color: #000;
+}
+
+.bill-amount {
+    font-weight: bold;
+    font-size: 16px;
+    color: #000;
+}
+
+/* --- HALAMAN PROFIL --- */
+
+.profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Judul "Profil Saya" */
+.profile-page-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+/* Kartu Profil Utama (Flexbox Kiri-Kanan) */
+.profile-card {
+    display: flex;
+    border-radius: 15px;
+    overflow: hidden; /* Supaya sudut hijau tidak lancip */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    background: white;
+    margin-bottom: 25px;
+    min-height: 320px;
+    border: 1px solid #ddd;
+}
+
+/* Sisi Kiri (Hijau) */
+.profile-left {
+    background-color: #00FF00; /* Hijau Neon */
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 20px;
+    color: white;
+}
+
+/* Lingkaran Foto Profil */
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    background-color: #bdfcc9; /* Hijau muda transparan */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 15px;
+    border: 2px solid white;
+}
+
+.profile-name-display {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.profile-org-display {
+    font-size: 16px;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Sisi Kanan (Formulir) */
+.profile-right {
+    background-color: white;
+    width: 60%;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.profile-header-info {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #000;
+}
+
+/* Input Group yang Rapi */
+.profile-input-group {
+    margin-bottom: 12px;
+    position: relative;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 5px 10px;
+    background: white;
+}
+
+.profile-label-small {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 0;
+    display: block;
+}
+
+.profile-input-field {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-weight: bold;
+    color: #000;
+    font-size: 14px;
+    background: transparent;
+    padding: 0;
+}
+
+/* Tombol Keluar (Merah) */
+.btn-logout {
+    display: block;
+    width: 100%;
+    background-color: #FF0000; /* Merah terang */
+    color: white;
+    text-align: center;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 16px;
+    border: none;
+    transition: background 0.2s;
+}
+
+.btn-logout:hover {
+    background-color: #cc0000;
+    color: white;
+}
+
+/* Responsive: Tumpuk ke bawah di HP */
+@media (max-width: 768px) {
+    .profile-card {
+        flex-direction: column;
+    }
+    .profile-left, .profile-right {
+        width: 100%;
+    }
+    .profile-left {
+        padding: 30px;
+    }
 }
