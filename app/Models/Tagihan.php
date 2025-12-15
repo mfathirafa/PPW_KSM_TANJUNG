@@ -1,31 +1,37 @@
 <?php
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+namespace App\Models;
+
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Tagihan extends Model
 {
-  use HasFactory;
+    use HasFactory;
 
-  protected $table = 'tagihans';
-  protected $primaryKey = 'id_tagihan';
-  public $timestamps = false;
+    protected $fillable = [
+        'pelanggan_id',
+        'bulan',
+        'jumlah',
+        'deadline',
+        'status',
+    ];
 
-  protected $fillable = [
-    'id_pelanggan',
-    'Tanggal',
-    'Jumlah',
-    'Status'
-  ];
+    protected $casts = [
+        'deadline' => 'date',
+    ];
 
-  public function pelanggan()
-  {
-    return $this->belongsTo(Pelanggan::class, 'id_pelanggan');
-  }
+    // =====================
+    // RELATIONS
+    // =====================
 
-  public function pembayaran()
-  {
-    return $this->hasMany(Pembayaran::class, 'id_tagihan');
-  }
+    public function pelanggan()
+    {
+        return $this->belongsTo(Pelanggan::class);
+    }
 
+    public function pembayaran()
+    {
+        return $this->hasOne(Pembayaran::class);
+    }
 }

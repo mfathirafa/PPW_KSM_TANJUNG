@@ -2,30 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Pelanggan extends Model
 {
     use HasFactory;
-    
-    protected $table = 'pelanggans';
-    protected $primaryKey = 'id_pelanggan';
-    public $timestamps = false;
 
     protected $fillable = [
         'user_id',
-        'nama',
         'alamat',
-        'no_hp'
     ];
+
+    // =====================
+    // RELATIONS
+    // =====================
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
-    public function tagihan()
+
+    public function tagihans()
     {
-        return $this->hasMany(Tagihan::class, 'ID_Pelanggan');
+        return $this->hasMany(Tagihan::class);
     }
 }
