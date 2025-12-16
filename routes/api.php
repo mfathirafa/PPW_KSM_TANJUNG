@@ -1,8 +1,11 @@
 <?php
-use App\Http\Controllers\AuhthConroller;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
-Route::post('/send-otp', [AuhthConroller::class, 'sendOtp']);
-Route::post('/verify-otp', [AuhthConroller::class, 'verifyOtp']);
+
+
+Route::post('/send-otp', [AuthController::class, 'sendOtp']);
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 
 Route::middleware('auth:sanctum')->group(function() {
     Route::get('/me', [AuthController::class, 'me']);
