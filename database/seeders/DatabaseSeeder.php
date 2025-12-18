@@ -3,14 +3,18 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Jalankan AdminSeeder
-        $this->call(AdminSeeder::class);
+        User::firstOrCreate(
+            ['phone' => '08156640837'],
+            [
+                'name' => 'Admin KSM',
+                'role' => 'admin',
+            ]
+        );
     }
 }
