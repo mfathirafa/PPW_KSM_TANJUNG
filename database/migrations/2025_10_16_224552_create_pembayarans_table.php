@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('tagihan_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->enum('method', ['qris', 'transfer']);
+            $table->enum('method', ['qris', 'transfer', 'cash']);
             $table->string('bukti'); // path file
             $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->string('catatan_admin')->nullable();

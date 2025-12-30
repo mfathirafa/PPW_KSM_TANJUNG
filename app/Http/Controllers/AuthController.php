@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Otp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -17,31 +19,27 @@ class AuthController extends Controller
             'phone' => 'required|min:10'
         ]);
 
-        $otp = rand(100000, 999999);
+        $otpCode = rand(100000, 999999);
 
+        // pastikan user ada
         $user = User::firstOrCreate(
             ['phone' => $request->phone],
-            [
-                'role' => 'customer',
-                'name' => null,
-            ]
+            ['role' => 'customer']
         );
 
-        $user->otp = $otp;
-        $user->otp_expires_at = Carbon::now()->addMinutes(3);
-        $user->save();
-
-        // NOTE:
-        // Di production → kirim via WhatsApp Gateway
-        // Di PPW → tampilkan di response (boleh)
+        // simpan OTP
+        Otp::create([
+            'phone' => $request->phone,
+            'code' => $otpCode,
+            'expires_at' => Carbon::now()->addMinutes(3)
+        ]);
 
         return response()->json([
             'message' => 'OTP sent',
-            'otp' => $otp,
+            'otp' => $otpCode, // PPW only
             'expires_in' => 180
         ]);
     }
-
     /**
      * VERIFY OTP
      */
@@ -49,26 +47,29 @@ class AuthController extends Controller
     {
         $request->validate([
             'phone' => 'required',
-            'otp'   => 'required'
+            'otp'   => 'required',
+            'name'  => 'nullable|string|max:100'
         ]);
+
+        $otp = Otp::where('phone', $request->phone)
+            ->where('code', $request->otp)
+            ->where('is_used', false)
+            ->latest()
+            ->first();
+
+        if (!$otp || $otp->expires_at->isPast()) {
+            return response()->json([
+                'message' => 'Invalid or expired OTP'
+            ], 401);
+        }
 
         $user = User::where('phone', $request->phone)->first();
 
-        if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+        if ($request->filled('name') && empty($user->name)) {
+            $user->update(['name' => $request->name]);
         }
 
-        if (
-            $user->otp !== $request->otp ||
-            $user->otp_expires_at->isPast()
-        ) {
-            return response()->json(['message' => 'Invalid or expired OTP'], 401);
-        }
-
-        // OTP valid → login
-        $user->otp = null;
-        $user->otp_expires_at = null;
-        $user->save();
+        $otp->update(['is_used' => true]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -79,17 +80,25 @@ class AuthController extends Controller
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
-                'phone' => $user->phone,
+                'phone' => $user->phone
             ]
         ]);
     }
+
 
     /**
      * CURRENT USER
      */
     public function me(Request $request)
     {
-        return response()->json($request->user());
+        $user = $request->user();
+
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->name,
+            'phone' => $user->phone,
+            'role' => $user->role
+        ]);
     }
 
     /**

@@ -8,34 +8,41 @@ use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 
 
+
 class PembayaranUserController extends Controller
 {
     // Upload pembayaran
-    public function store(Request $request, Tagihan $tagihan)
+    public function store(Request $request)
     {
         $user = $request->user();
 
-        // Pastikan tagihan milik user
+        $request->validate([
+            'tagihan_id' => 'required|exists:tagihans,id',
+            'method'     => 'required|string|in:qris,transfer,cash',
+            'jumlah'     => 'required|integer',
+            'bukti'      => 'nullable|image|max:2048',
+        ]);
+
+        $tagihan = Tagihan::with('pelanggan')->findOrFail($request->tagihan_id);
+
         if ($tagihan->pelanggan->user_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        // Cegah bayar dua kali
         if ($tagihan->pembayaran) {
             return response()->json(['message' => 'Tagihan sudah dibayar'], 400);
         }
 
-        $request->validate([
-            'method' => 'required|in:qris,transfer',
-            'bukti'  => 'required|file|image|max:2048',
-        ]);
-
-        $path = $request->file('bukti')->store('bukti', 'public');
+        $path = null;
+        if ($request->hasFile('bukti')) {
+            $path = $request->file('bukti')->store('bukti', 'public');
+        }
 
         $pembayaran = Pembayaran::create([
             'tagihan_id' => $tagihan->id,
             'user_id'    => $user->id,
             'method'     => $request->method,
+            'jumlah'     => $request->jumlah,
             'bukti'      => $path,
             'status'     => 'pending',
         ]);
@@ -45,14 +52,13 @@ class PembayaranUserController extends Controller
             'data' => $pembayaran
         ], 201);
     }
-
-    // Riwayat pembayaran
     public function riwayat(Request $request)
     {
-        return Pembayaran::with('tagihan')
+        return Pembayaran::with(['tagihan'])
             ->where('user_id', $request->user()->id)
             ->orderBy('created_at', 'desc')
             ->get();
     }
+
     
 }

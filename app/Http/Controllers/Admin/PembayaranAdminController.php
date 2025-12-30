@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pembayaran;
+use App\Models\Tagihan;
+use Illuminate\Http\Request;
 
 class PembayaranAdminController extends Controller
 {
@@ -34,20 +36,25 @@ class PembayaranAdminController extends Controller
     }
 
     // Tolak pembayaran
-    public function reject(Request $request, $id)
+   public function reject(Request $request, $id)
     {
         $request->validate([
-            'catatan' => 'nullable|string'
+            'alasan' => 'nullable|string|max:255'
         ]);
 
-        $pembayaran = Pembayaran::findOrFail($id);
+        $pembayaran = Pembayaran::with('tagihan')->findOrFail($id);
 
         $pembayaran->status = 'rejected';
-        $pembayaran->catatan_admin = $request->catatan;
+        $pembayaran->catatan_admin = $request->alasan;
         $pembayaran->save();
+
+        // Kembalikan status tagihan ke unpaid
+        $pembayaran->tagihan->status = 'unpaid';
+        $pembayaran->tagihan->save();
 
         return response()->json([
             'message' => 'Pembayaran ditolak'
         ]);
     }
+
 }
