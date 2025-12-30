@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Otp;
+use App\Models\Pelanggan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -21,13 +22,13 @@ class AuthController extends Controller
 
         $otpCode = rand(100000, 999999);
 
-        // pastikan user ada
+        // Pastikan user ada
         $user = User::firstOrCreate(
             ['phone' => $request->phone],
             ['role' => 'customer']
         );
 
-        // simpan OTP
+        // Simpan OTP
         Otp::create([
             'phone' => $request->phone,
             'code' => $otpCode,
@@ -40,6 +41,7 @@ class AuthController extends Controller
             'expires_in' => 180
         ]);
     }
+
     /**
      * VERIFY OTP
      */
@@ -65,12 +67,26 @@ class AuthController extends Controller
 
         $user = User::where('phone', $request->phone)->first();
 
+        // Simpan nama jika pertama kali login
         if ($request->filled('name') && empty($user->name)) {
             $user->update(['name' => $request->name]);
         }
 
+        // Pastikan customer punya data pelanggan
+        if ($user->role === 'customer') {
+            Pelanggan::firstOrCreate(
+                ['user_id' => $user->id],
+                ['alamat' => '-']
+            );
+        }
+
+        // Tandai OTP sudah dipakai
         $otp->update(['is_used' => true]);
 
+        // 🔥 PENTING: LOGIN KE SESSION WEB
+        Auth::login($user);
+
+        // Token untuk API
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -85,9 +101,8 @@ class AuthController extends Controller
         ]);
     }
 
-
     /**
-     * CURRENT USER
+     * CURRENT USER (API)
      */
     public function me(Request $request)
     {
@@ -106,7 +121,13 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        // Logout API token
+        if ($request->user()->currentAccessToken()) {
+            $request->user()->currentAccessToken()->delete();
+        }
+
+        // Logout session web
+        Auth::logout();
 
         return response()->json([
             'message' => 'Logged out'

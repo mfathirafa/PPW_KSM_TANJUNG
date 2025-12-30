@@ -12,7 +12,7 @@
         
         <div class="profile-left">
             <div class="profile-avatar">F</div>
-            <div class="profile-name-display">Fathi Setiawan</div>
+            <div class="profile-name-display">{{ $user->name ?? 'Pelanggan' }}</div>
             <div class="profile-org-display">KSM - Tanjung</div>
         </div>
 
@@ -21,17 +21,17 @@
 
             <div class="profile-input-group">
                 <label class="profile-label-small">Nama Lengkap</label>
-                <input type="text" class="profile-input-field" value="Fathi Setiawan" readonly>
+                <input type="text" class="profile-input-field" value="{{ $user->name ?? '-' }}" readonly>
             </div>
 
             <div class="profile-input-group">
                 <label class="profile-label-small">No. Whatsapp</label>
-                <input type="text" class="profile-input-field" value="+62 876-0542-1234" readonly>
+                <input type="text" class="profile-input-field" value="{{ $user->phone ?? '-' }}" readonly>
             </div>
 
             <div class="profile-input-group">
                 <label class="profile-label-small">Alamat</label>
-                <textarea class="profile-input-field" rows="2" readonly style="resize: none;">Jl. Tanjung Raya No. 45, RT 03/RW 02</textarea>
+                <textarea class="profile-input-field" rows="2" readonly style="resize: none;">{{ $user->pelanggan->alamat ?? '-' }}</textarea>
             </div>
 
             <div class="profile-input-group">

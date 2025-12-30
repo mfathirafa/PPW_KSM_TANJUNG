@@ -40,7 +40,7 @@
             </a>
         </header>
 
-        <main class="user-content">
+        <main class="user-content pb-5">
             @yield('content')
         </main>
 

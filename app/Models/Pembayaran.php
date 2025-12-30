@@ -13,6 +13,7 @@ class Pembayaran extends Model
         'tagihan_id',
         'user_id',
         'method',
+        'jumlah',
         'bukti',
         'status',
         'catatan_admin',

@@ -5,10 +5,15 @@
 @section('content')
 
 <div class="mb-4">
-    <h4 class="fw-bold">Selamat datang, Mbah fathi!</h4>
-    <small class="text-muted">Minggu, 20 April 2025</small>
+    <h4 class="fw-bold">
+        Selamat datang, {{ $user->name ?? 'Pelanggan' }}!
+    </h4>
+    <small class="text-muted">
+        {{ now()->translatedFormat('l, d F Y') }}
+    </small>
 </div>
 
+{{-- INFORMASI PELANGGAN --}}
 <div class="info-card">
     <div class="card-header">
         Informasi Pelanggan
@@ -16,78 +21,97 @@
     <ul class="list-group list-group-flush">
         <li class="list-group-item">
             <strong>Nama Lengkap</strong>
-            <span>Fathi Setiawan</span>
+            <span>{{ $user->name ?? '-' }}</span>
         </li>
         <li class="list-group-item">
             <strong>Nomor Whatsapp</strong>
-            <span>+62 876-0542-1234</span>
+            <span>{{ $user->phone ?? '-' }}</span>
         </li>
         <li class="list-group-item">
             <strong>Alamat</strong>
-            <span>Jl. Tanjung Raya No. 45, RT 03/RW 02</span>
+            <span>{{ $user->pelanggan->alamat ?? '-' }}</span>
         </li>
         <li class="list-group-item">
             <strong>Role</strong>
-            <span>Pelanggan</span>
+            <span>{{ $user->role ?? '-' }}</span>
         </li>
     </ul>
 </div>
 
+{{-- INFORMASI TAGIHAN --}}
 <div class="info-card">
     <div class="card-header">
         Informasi Tagihan
     </div>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-            <strong>Bulan</strong>
-            <span>April 2025</span>
-        </li>
-        <li class="list-group-item">
-            <strong>Status</strong>
-            <span class="badge-custom-yellow">Belum Dibayar</span>
-        </li>
-        <li class="list-group-item">
-            <strong>Jumlah</strong>
-            <span class="fw-bold">Rp.15.000</span>
-        </li>
-        <li class="list-group-item">
-            <strong>Deadline</strong>
-            <span>30 April 2025</span>
-        </li>
-    </ul>
-    <div class="card-footer bg-white p-3">
-        <div class="d-grid">
-            <button class="btn btn-success fw-bold">Bayar Sekarang</button>
+
+    @if($tagihan)
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <strong>Bulan</strong>
+                <span>
+                    {{ \Carbon\Carbon::parse($tagihan->bulan . '-01')->translatedFormat('F Y') }}
+                </span>
+            </li>
+            <li class="list-group-item">
+                <strong>Status</strong>
+                @if($tagihan->status === 'paid')
+                    <span class="badge-custom-green">Lunas</span>
+                @else
+                    <span class="badge-custom-yellow">Belum Dibayar</span>
+                @endif
+            </li>
+            <li class="list-group-item">
+                <strong>Jumlah</strong>
+                <span class="fw-bold">
+                    Rp {{ number_format($tagihan->jumlah, 0, ',', '.') }}
+                </span>
+            </li>
+            <li class="list-group-item">
+                <strong>Deadline</strong>
+                <span>
+                    {{ \Carbon\Carbon::parse($tagihan->deadline)->translatedFormat('d F Y') }}
+                </span>
+            </li>
+        </ul>
+
+        @if($tagihan->status !== 'paid')
+            <div class="card-footer bg-white p-3">
+                <div class="d-grid">
+                    <a href="{{ url('/bills') }}" class="btn btn-success fw-bold">
+                        Bayar Sekarang
+                    </a>
+                </div>
+            </div>
+        @endif
+    @else
+        <div class="p-3 text-muted">
+            Tidak ada tagihan aktif saat ini.
         </div>
-    </div>
+    @endif
 </div>
 
+{{-- NOTIFIKASI --}}
 <div>
     <h5 class="fw-bold mb-3">Notifikasi</h5>
 
-    <div class="notif-box alert-success">
-        <i class="fas fa-check-circle"></i>
-        <div class="notif-content">
-            <p>Tagihan bulan April 2025 telah dibuat.</p>
-            <small>20 April 2025, 08:30</small>
+    @forelse($notifikasis as $notif)
+        <div class="notif-box alert-{{ $notif->tipe }}">
+            <i class="fas
+                @if($notif->tipe === 'success') fa-check-circle
+                @elseif($notif->tipe === 'danger') fa-times-circle
+                @else fa-exclamation-triangle
+                @endif
+            "></i>
+            <div class="notif-content">
+                <p>{{ $notif->isi_pesan }}</p>
+                <small>{{ $notif->created_at->format('d M Y, H:i') }}</small>
+            </div>
         </div>
-    </div>
-
-    <div class="notif-box alert-danger">
-        <i class="fas fa-times-circle"></i>
-        <div class="notif-content">
-            <p>Tagihan bulan Maret 2025 telah Terlambat.</p>
-            <small>20 April 2025, 08:30</small>
+    @empty
+        <div class="text-muted">
+            Tidak ada notifikasi.
         </div>
-    </div>
-
-    <div class="notif-box alert-warning">
-        <i class="fas fa-exclamation-triangle"></i>
-        <div class="notif-content">
-            <p>Tagihan bulan Mei 2025 yang akan datang.</p>
-            <small>20 April 2025, 08:30</small>
-        </div>
-    </div>
+    @endforelse
 </div>
 
 @endsection

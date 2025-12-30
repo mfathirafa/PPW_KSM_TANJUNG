@@ -12,7 +12,7 @@
                     <i class="fas fa-users fa-2x text-muted me-3"></i>
                     <div>
                         <p class="card-text text-muted mb-1">Total Pelanggan</p>
-                        <h4 class="card-title fw-bold mb-1">50</h4>
+                        <h4 class="card-title fw-bold mb-1">{{ $totalPelanggan }}</h4>
                         <a href="#" class="sub-link text-success">3 Bulan Ini</a>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
                     <i class="fas fa-file-invoice-dollar fa-2x text-muted me-3"></i>
                     <div>
                         <p class="card-text text-muted mb-1">Total Tagihan Bulan Ini</p>
-                        <h4 class="card-title fw-bold mb-1">Rp 50.000</h4>
+                        <h4 class="card-title fw-bold mb-1">{{ $totalTagihan }}</h4>
                         <a href="#" class="sub-link text-success">Dari 10 Tagihan</a>
                     </div>
                 </div>
