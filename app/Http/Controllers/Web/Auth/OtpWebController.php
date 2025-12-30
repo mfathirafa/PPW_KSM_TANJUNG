@@ -50,20 +50,21 @@ class OtpWebController extends Controller
             ->first();
 
         if (!$otp || $otp->expires_at->isPast()) {
-            return response()->json([
-                'message' => 'OTP tidak valid'
-            ], 422);
+            return back()->withErrors(['otp' => 'OTP tidak valid atau kadaluarsa']);
         }
 
         $user = User::where('phone', $request->phone)->firstOrFail();
 
+        // 🔥 LOGIN SESSION WEB
         Auth::login($user);
+
         $otp->update(['is_used' => true]);
 
-        return response()->json([
-            'redirect' => $user->role === 'admin'
-                ? '/admin/dashboard'
-                : '/dashboard'
-        ]);
+        // 🔥 REDIRECT SESUAI ROLE
+        if ($user->role === 'admin') {
+            return redirect('/admin/dashboard');
+        }
+
+        return redirect('/dashboard');
     }
 }

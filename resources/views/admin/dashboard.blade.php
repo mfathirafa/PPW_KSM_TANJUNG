@@ -26,7 +26,7 @@
                     <i class="fas fa-file-invoice-dollar fa-2x text-muted me-3"></i>
                     <div>
                         <p class="card-text text-muted mb-1">Total Tagihan Bulan Ini</p>
-                        <h4 class="card-title fw-bold mb-1">{{ $totalTagihan }}</h4>
+                        <h4 class="card-title fw-bold mb-1">{{ $tagihanBulanIni }}</h4>
                         <a href="#" class="sub-link text-success">Dari 10 Tagihan</a>
                     </div>
                 </div>

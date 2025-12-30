@@ -14,9 +14,14 @@ class DashboardController extends Controller
         $totalPelanggan = Pelanggan::count();
         $tagihanBulanIni = Tagihan::whereMonth('created_at', now()->month)->count();
 
-        $pemasukanHariIni = Pembayaran::where('status', 'accepted')
-            ->whereDate('created_at', today())
-            ->join('tagihans', 'pembayarans.tagihan_id', '=', 'tagihans.id')
+        $pemasukanHariIni = Pembayaran::join(
+                'tagihans',
+                'pembayarans.tagihan_id',
+                '=',
+                'tagihans.id'
+            )
+            ->where('pembayarans.status', 'accepted')
+            ->whereDate('pembayarans.created_at', today())
             ->sum('tagihans.jumlah');
 
         $menungguVerifikasi = Pembayaran::where('status', 'pending')->count();
