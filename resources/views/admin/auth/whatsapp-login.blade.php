@@ -19,25 +19,22 @@
             <div class="card auth-card shadow-lg border-0">
                 <div class="card-body p-4 p-md-5 text-center">
 
-                    <a href="{{ url('/admin/login') }}" class="back-button">
-                        <i class="fas fa-arrow-left"></i>
-                    </a>
-
                     <i class="fab fa-whatsapp fa-3x text-success mt-4 mb-3"></i>
 
                     <h1 class="h2 fw-bold">Login dengan WhatsApp</h1>
                     <p class="text-muted mb-4">Masuk Menggunakan Nomor WhatsApp Anda</p>
 
-                    <!-- 🔥 FIXED FORM -->
+                    {{-- FORM OTP --}}
                     <form method="POST" action="/whatsapp/send-otp">
                         @csrf
+
                         <div class="input-group mb-3">
                             <span class="input-group-text">+62</span>
                             <input
-                                type="tel"
+                                type="text"
                                 name="phone"
                                 class="form-control form-control-lg"
-                                placeholder="Masukkan Nomor WhatsApp Anda"
+                                placeholder="812xxxxxxxx"
                                 required>
                         </div>
 
@@ -48,10 +45,11 @@
                         </div>
                     </form>
 
-                    <div class="info-box text-muted mb-4">
-                        <i class="fas fa-info-circle"></i>
-                        <span>Kami akan mengirimkan Kode Verifikasi melalui WhatsApp</span>
-                    </div>
+                    @if ($errors->any())
+                        <div class="text-danger mt-2">
+                            {{ $errors->first() }}
+                        </div>
+                    @endif
 
                 </div>
             </div>

@@ -24,11 +24,11 @@
                         Masukkan 6 digit kode verifikasi
                     </p>
 
-                    <!-- 🔥 FIXED FORM -->
+                    {{-- FORM VERIFY --}}
                     <form method="POST" action="/whatsapp/verify-otp">
                         @csrf
 
-                        <!-- phone dibawa dari URL -->
+                        {{-- phone WAJIB --}}
                         <input type="hidden" name="phone" value="{{ request('phone') }}">
 
                         <div class="d-flex justify-content-center mb-4">
@@ -38,6 +38,7 @@
                                 class="form-control text-center"
                                 maxlength="6"
                                 style="width: 180px; letter-spacing: 8px;"
+                                placeholder="••••••"
                                 required>
                         </div>
 
