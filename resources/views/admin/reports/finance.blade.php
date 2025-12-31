@@ -8,7 +8,7 @@
     <h3 class="fw-bold">Laporan Keuangan KSM Tanjung</h3>
 </div>
 
-{{-- FILTER --}}
+{{-- ================= FILTER ================= --}}
 <form method="GET" action="{{ route('admin.reports.finance') }}" class="row g-3 mb-4">
     <div class="col-md-4">
         <label class="form-label fw-bold">Bulan</label>
@@ -41,10 +41,10 @@
     </div>
 </form>
 
-{{-- SUMMARY --}}
+{{-- ================= SUMMARY ================= --}}
 <div class="row g-4 mb-4">
     <div class="col-md-6">
-        <div class="card report-card border-success shadow-sm">
+        <div class="card border-success shadow-sm">
             <div class="card-body">
                 <p class="text-muted mb-1">Total Pemasukan</p>
                 <h4 class="fw-bold">
@@ -55,7 +55,7 @@
     </div>
 
     <div class="col-md-6">
-        <div class="card report-card border-danger shadow-sm">
+        <div class="card border-danger shadow-sm">
             <div class="card-body">
                 <p class="text-muted mb-1">Total Tagihan Dibuat</p>
                 <h4 class="fw-bold">{{ $totalTagihan }}</h4>
@@ -64,17 +64,17 @@
     </div>
 </div>
 
-{{-- GRAFIK --}}
+{{-- ================= GRAFIK ================= --}}
 <div class="card shadow-sm mb-4">
     <div class="card-header text-center">
         <h5 class="fw-bold mb-0">Grafik Pemasukan Bulanan</h5>
     </div>
     <div class="card-body">
-        <canvas id="financeChart"></canvas>
+        <canvas id="financeChart" style="min-height:320px;"></canvas>
     </div>
 </div>
 
-{{-- ACTION --}}
+{{-- ================= ACTION ================= --}}
 <div class="card shadow-sm mb-4">
     <div class="card-body d-flex justify-content-center gap-3 flex-wrap">
         <a href="{{ route('admin.reports.finance.csv', request()->all()) }}"
@@ -89,7 +89,7 @@
     </div>
 </div>
 
-{{-- DETAIL BULANAN --}}
+{{-- ================= DETAIL BULANAN ================= --}}
 <div class="card shadow-sm">
     <div class="card-header">
         <h5 class="fw-bold mb-0">Detail Laporan Bulanan</h5>
@@ -109,9 +109,7 @@
                     @forelse ($laporanBulanan as $row)
                         <tr>
                             <td>
-                                {{ \Carbon\Carbon::create()
-                                    ->month($row->bulan)
-                                    ->translatedFormat('F') }}
+                                {{ \Carbon\Carbon::create()->month($row->bulan)->translatedFormat('F') }}
                                 {{ $row->tahun }}
                             </td>
                             <td>
@@ -161,6 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             scales: {
                 y: {
                     beginAtZero: true,

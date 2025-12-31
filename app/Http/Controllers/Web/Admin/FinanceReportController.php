@@ -44,7 +44,7 @@ class FinanceReportController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | DATA GRAFIK BULANAN (1 TAHUN)
+        | DATA GRAFIK PEMASUKAN 1 TAHUN
         |--------------------------------------------------------------------------
         */
         $chartRaw = Pembayaran::join(
@@ -100,8 +100,8 @@ class FinanceReportController extends Controller
         return view('admin.reports.finance', [
             'totalPemasukan' => $totalPemasukan,
             'totalTagihan'   => $totalTagihan,
-            'chartLabels'    => json_encode($chartLabels),
-            'chartData'      => json_encode($chartData),
+            'chartLabels'    => $chartLabels, // ⬅️ ARRAY ASLI
+            'chartData'      => $chartData,   // ⬅️ ARRAY ASLI
             'laporanBulanan' => $laporanBulanan,
             'bulan'          => $bulan,
             'tahun'          => $tahun,
