@@ -27,7 +27,7 @@
                     <div>
                         <p class="card-text text-muted mb-1">Total Tagihan Bulan Ini</p>
                         <h4 class="card-title fw-bold mb-1">{{ $tagihanBulanIni }}</h4>
-                        <a href="#" class="sub-link text-success">Dari 10 Tagihan</a>
+                        <a href="#" class="sub-link text-success">Dari {{ $tagihanBulanIni }} Tagihan</a>
                     </div>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                     <i class="fas fa-history fa-2x text-muted me-3"></i>
                     <div>
                         <p class="card-text text-muted mb-1">Menunggu Verifikasi</p>
-                        <h4 class="card-title fw-bold mb-1">7</h4>
+                        <h4 class="card-title fw-bold mb-1">{{ $menungguVerifikasi }}</h4>
                         <a href="#" class="sub-link text-warning">Perlu ditindak lanjuti</a>
                     </div>
                 </div>
@@ -54,8 +54,8 @@
                     <i class="fas fa-hand-holding-usd fa-2x text-muted me-3"></i>
                     <div>
                         <p class="card-text text-muted mb-1">Pembayaran hari ini</p>
-                        <h4 class="card-title fw-bold mb-1">Rp 15.000</h4>
-                        <a href="#" class="sub-link text-success">3 Transaksi</a>
+                        <h4 class="card-title fw-bold mb-1">{{ number_format($pemasukanHariIni, 0, ',', '.') }}</h4>
+                        <a href="#" class="sub-link text-success">{{ $tagihanTerbaru->count() ?? 0}} Transaksi</a>
                     </div>
                 </div>
             </div>
@@ -71,34 +71,39 @@
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-hover">
-                <thead>
+               <tbody>
+                @forelse ($tagihanTerbaru as $tagihan)
                     <tr>
-                        <th>Pelanggan</th>
-                        <th>Bulan</th>
-                        <th>Jumlah</th>
-                        <th>Status</th>
+                        <td>{{ $tagihan->pelanggan->user->name }}</td>
+
+                        <td>{{ $tagihan->bulan }}</td>
+
+                        <td>
+                            Rp. {{ number_format($tagihan->jumlah, 0, ',', '.') }}
+                        </td>
+
+                        <td>
+                            @if ($tagihan->status === 'paid')
+                                <span class="badge bg-lunas rounded-pill">Lunas</span>
+                            @elseif ($tagihan->status === 'unpaid')
+                                <span class="badge bg-belum-lunas rounded-pill text-dark">
+                                    Belum Lunas
+                                </span>
+                            @else
+                                <span class="badge bg-terlambat rounded-pill">
+                                    Terlambat
+                                </span>
+                            @endif
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
+                @empty
                     <tr>
-                        <td>Ahmad Rizki</td>
-                        <td>April 2025</td>
-                        <td>Rp. 5.000</td>
-                        <td><span class="badge bg-lunas rounded-pill">Lunas</span></td>
+                        <td colspan="4" class="text-center text-muted">
+                            Belum ada data tagihan
+                        </td>
                     </tr>
-                    <tr>
-                        <td>Faisal Gunawan</td>
-                        <td>April 2025</td>
-                        <td>Rp. 5.000</td>
-                        <td><span class="badge bg-belum-lunas rounded-pill text-dark">Belum Lunas</span></td>
-                    </tr>
-                    <tr>
-                        <td>Aceng</td>
-                        <td>April 2025</td>
-                        <td>Rp. 5.000</td>
-                        <td><span class="badge bg-terlambat rounded-pill">Terlambat</span></td>
-                    </tr>
-                </tbody>
+                @endforelse
+            </tbody>
             </table>
         </div>
     </div>

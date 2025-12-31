@@ -18,7 +18,7 @@ class Pembayaran extends Model
         'status',
         'catatan_admin',
     ];
-
+    protected $casts = ['created_at' => 'datetime'];
     // =====================
     // RELATIONS
     // =====================

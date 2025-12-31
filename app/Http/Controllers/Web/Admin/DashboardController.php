@@ -12,6 +12,7 @@ class DashboardController extends Controller
     public function index()
     {
         $totalPelanggan = Pelanggan::count();
+
         $tagihanBulanIni = Tagihan::whereMonth('created_at', now()->month)->count();
 
         $pemasukanHariIni = Pembayaran::join(
@@ -21,16 +22,23 @@ class DashboardController extends Controller
                 'tagihans.id'
             )
             ->where('pembayarans.status', 'accepted')
-            ->whereDate('pembayarans.created_at', today())
+            ->whereDate('pembayarans.updated_at', today())
             ->sum('tagihans.jumlah');
 
         $menungguVerifikasi = Pembayaran::where('status', 'pending')->count();
+
+        // 🔥 INI YANG KAMU LUPA TOTAL
+        $tagihanTerbaru = Tagihan::with('pelanggan.user')
+            ->latest()
+            ->take(5)
+            ->get();
 
         return view('admin.dashboard', compact(
             'totalPelanggan',
             'tagihanBulanIni',
             'pemasukanHariIni',
-            'menungguVerifikasi'
+            'menungguVerifikasi',
+            'tagihanTerbaru'
         ));
     }
 }

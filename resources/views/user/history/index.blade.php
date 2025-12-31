@@ -1,58 +1,74 @@
 @extends('layouts.user')
 
-@section('title', 'Riwayat Transaksi')
+@section('title', 'Riwayat Pembayaran')
 
 @section('content')
 
-<div class="container" style="max-width: 900px;">
-    
-    <h2 class="page-title mb-4">Riwayat Transaksi Pembayaran</h2>
+<div class="container" style="max-width: 900px">
 
-    <div class="row">
+<h4 class="fw-bold mb-4">Riwayat Pembayaran</h4>
 
-        @forelse ($riwayat as $item)
-            <div class="col-md-6 mb-4">
-                <div class="history-card">
-                    <div>
-                        <div class="card-header-row">
-                            <span class="bill-number">
-                                Tagihan #{{ $item->tagihan->id }}
-                            </span>
+@forelse ($riwayat as $item)
+<div class="card shadow-sm mb-3">
+    <div class="card-body">
 
-                            @if ($item->status === 'accepted')
-                                <span class="badge-status badge-confirmed">Terkonfirmasi</span>
-                            @elseif ($item->status === 'pending')
-                                <span class="badge-status badge-pending">Menunggu Pembayaran</span>
-                            @else
-                                <span class="badge-status badge-rejected">Ditolak</span>
-                            @endif
-                        </div>
+        <div class="d-flex justify-content-between">
+            <div>
+                <p class="fw-bold mb-1">
+                    Tagihan {{ $item->tagihan->bulan }}
+                </p>
 
-                        <div class="bill-date">
-                            {{ $item->created_at->translatedFormat('d F Y') }}
-                        </div>
-                    </div>
-
-                    <div class="card-footer-row">
-                        <span class="payment-method">
-                            {{ strtoupper($item->method) }}
-                        </span>
-
-                        <span class="bill-amount">
-                            Rp {{ number_format($item->tagihan->jumlah, 0, ',', '.') }}
-                        </span>
-                    </div>
-                </div>
+                <small class="text-muted">
+                    {{ $item->created_at->translatedFormat('d F Y') }}
+                </small>
             </div>
-        @empty
-            <div class="col-12">
-                <div class="alert alert-light text-center">
-                    Belum ada riwayat transaksi.
-                </div>
+
+            <div>
+                @if ($item->status === 'accepted')
+                    <span class="badge bg-success">Diterima</span>
+                @elseif ($item->status === 'pending')
+                    <span class="badge bg-warning text-dark">Menunggu</span>
+                @else
+                    <span class="badge bg-danger">Ditolak</span>
+                @endif
             </div>
-        @endforelse
+        </div>
+
+        <hr>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <p class="mb-0">
+                    Metode: <strong>{{ strtoupper($item->method) }}</strong>
+                </p>
+                <p class="fw-bold text-success mb-0">
+                    Rp {{ number_format($item->tagihan->jumlah, 0, ',', '.') }}
+                </p>
+            </div>
+
+            @if ($item->status === 'accepted')
+                <a href="{{ route('user.history.invoice', $item->id) }}"
+                   class="btn btn-outline-primary btn-sm">
+                    Invoice PDF
+                </a>
+            @endif
+        </div>
+
+        @if ($item->status === 'rejected' && $item->catatan_admin)
+            <div class="alert alert-light mt-3">
+                <strong>Catatan Admin:</strong><br>
+                {{ $item->catatan_admin }}
+            </div>
+        @endif
 
     </div>
+</div>
+@empty
+<div class="alert alert-light text-center">
+    Belum ada riwayat pembayaran
+</div>
+@endforelse
+
 </div>
 
 @endsection
