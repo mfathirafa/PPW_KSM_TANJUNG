@@ -14,7 +14,7 @@
 </div>
 
 {{-- INFORMASI PELANGGAN --}}
-<div class="info-card">
+<div class="info-card mb-4">
     <div class="card-header">
         Informasi Pelanggan
     </div>
@@ -33,48 +33,51 @@
         </li>
         <li class="list-group-item">
             <strong>Role</strong>
-            <span>{{ $user->role ?? '-' }}</span>
+            <span>{{ ucfirst($user->role) }}</span>
         </li>
     </ul>
 </div>
 
 {{-- INFORMASI TAGIHAN --}}
-<div class="info-card">
+<div class="info-card mb-4">
     <div class="card-header">
         Informasi Tagihan
     </div>
 
-    @if($tagihan)
+    @if($tagihanAktif)
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
                 <strong>Bulan</strong>
                 <span>
-                    {{ \Carbon\Carbon::parse($tagihan->bulan . '-01')->translatedFormat('F Y') }}
+                    {{ \Carbon\Carbon::parse($tagihanAktif->bulan . '-01')->translatedFormat('F Y') }}
                 </span>
             </li>
+
             <li class="list-group-item">
                 <strong>Status</strong>
-                @if($tagihan->status === 'paid')
-                    <span class="badge-custom-green">Lunas</span>
+                @if($tagihanAktif->status === 'paid')
+                    <span class="badge bg-success">Lunas</span>
                 @else
-                    <span class="badge-custom-yellow">Belum Dibayar</span>
+                    <span class="badge bg-warning text-dark">Belum Dibayar</span>
                 @endif
             </li>
+
             <li class="list-group-item">
                 <strong>Jumlah</strong>
                 <span class="fw-bold">
-                    Rp {{ number_format($tagihan->jumlah, 0, ',', '.') }}
+                    Rp {{ number_format($tagihanAktif->jumlah, 0, ',', '.') }}
                 </span>
             </li>
+
             <li class="list-group-item">
                 <strong>Deadline</strong>
                 <span>
-                    {{ \Carbon\Carbon::parse($tagihan->deadline)->translatedFormat('d F Y') }}
+                    {{ \Carbon\Carbon::parse($tagihanAktif->deadline)->translatedFormat('d F Y') }}
                 </span>
             </li>
         </ul>
 
-        @if($tagihan->status !== 'paid')
+        @if($tagihanAktif->status !== 'paid')
             <div class="card-footer bg-white p-3">
                 <div class="d-grid">
                     <a href="{{ url('/bills') }}" class="btn btn-success fw-bold">
@@ -94,18 +97,10 @@
 <div>
     <h5 class="fw-bold mb-3">Notifikasi</h5>
 
-    @forelse($notifikasis as $notif)
-        <div class="notif-box alert-{{ $notif->tipe }}">
-            <i class="fas
-                @if($notif->tipe === 'success') fa-check-circle
-                @elseif($notif->tipe === 'danger') fa-times-circle
-                @else fa-exclamation-triangle
-                @endif
-            "></i>
-            <div class="notif-content">
-                <p>{{ $notif->isi_pesan }}</p>
-                <small>{{ $notif->created_at->format('d M Y, H:i') }}</small>
-            </div>
+    @forelse($notifikasi as $notif)
+        <div class="alert alert-{{ $notif->tipe }}">
+            <p class="mb-1">{{ $notif->isi_pesan }}</p>
+            <small>{{ $notif->created_at->format('d M Y, H:i') }}</small>
         </div>
     @empty
         <div class="text-muted">

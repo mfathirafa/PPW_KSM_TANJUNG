@@ -25,7 +25,7 @@
                     </p>
 
                     {{-- FORM VERIFY --}}
-                    <form method="POST" action="{{ route('admin.verify-code') }}">
+                    <form method="POST" action="{{ route('otp.verify.admin') }}">
                         @csrf
 
                         {{-- phone WAJIB --}}

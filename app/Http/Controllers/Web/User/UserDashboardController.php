@@ -14,6 +14,8 @@ class UserDashboardController extends Controller
     {
         $user = Auth::user();
 
+        
+
         $tagihanAktif = Tagihan::whereHas('pelanggan', fn ($q) =>
             $q->where('user_id', $user->id)
         )->where('status', 'unpaid')->first();

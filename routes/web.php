@@ -3,9 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Auth\OtpWebController;
 use App\Http\Controllers\Web\User\UserDashboardController;
+use App\Http\Controllers\Web\User\UserHistoryController;
 use App\Http\Controllers\Web\Admin\DashboardController;
 use App\Http\Controllers\Web\Admin\CustomerController;
-use App\Http\Controllers\Web\Admin\HistoryController;
+use App\Http\Controllers\Web\Admin\HistoryController;   
 use App\Http\Controllers\Web\Admin\ConfirmationController;
 use App\Http\Controllers\Web\Admin\FinanceReportController;
 use App\Http\Controllers\Web\Admin\SettingController;
@@ -73,7 +74,10 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('customer.dashboard');
     Route::get('/bills', [UserDashboardController::class, 'bills']);
-    Route::get('/history', [UserDashboardController::class, 'history']);
+
+    Route::get('/history', [UserHistoryController::class, 'index'])->name('user.history');
+    Route::get('/history/invoice/{pembayaran}', [UserHistoryController::class, 'invoice'])->name('user.history.invoice');
+
     Route::get('/profile', [UserDashboardController::class, 'profile']);
 
     Route::post('/logout', [UserDashboardController::class, 'logout'])
@@ -103,9 +107,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/confirmations/{pembayaran}/accept', [ConfirmationController::class, 'accept']);
     Route::post('/admin/confirmations/{pembayaran}/reject', [ConfirmationController::class, 'reject']);
 
-    Route::get('/admin/reports/finance', [FinanceReportController::class, 'index']);
-    Route::get('/admin/reports/finance/csv', [FinanceReportController::class, 'exportCsv']);
-    Route::get('/admin/reports/finance/pdf', [FinanceReportController::class, 'exportPdf']);
+    Route::get('/admin/reports/finance', [FinanceReportController::class, 'index'])->name('admin.reports.finance');
+    Route::get('/admin/reports/finance/csv', [FinanceReportController::class, 'exportCsv'])->name('admin.reports.finance.csv');
+    Route::get('/admin/reports/finance/pdf', [FinanceReportController::class, 'exportPdf'])->name('admin.reports.finance.pdf');
 
     Route::get('/admin/settings', [SettingController::class, 'index']);
 

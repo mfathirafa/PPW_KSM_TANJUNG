@@ -152,10 +152,10 @@ document.addEventListener('DOMContentLoaded', function () {
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: {!! $chartLabels !!},
+            labels: @json($chartLabels),
             datasets: [{
                 label: 'Pemasukan',
-                data: {!! $chartData !!},
+                data: @json($chartData),
                 backgroundColor: '#34D399'
             }]
         },

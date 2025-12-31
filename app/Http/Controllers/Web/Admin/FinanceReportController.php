@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Pembayaran;
 use App\Models\Tagihan;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class FinanceReportController extends Controller
 {
@@ -16,47 +17,66 @@ class FinanceReportController extends Controller
         $bulan = $request->bulan ?? now()->month;
         $tahun = $request->tahun ?? now()->year;
 
-        // TOTAL PEMASUKAN
+        /*
+        |--------------------------------------------------------------------------
+        | TOTAL PEMASUKAN BULAN INI
+        |--------------------------------------------------------------------------
+        */
         $totalPemasukan = Pembayaran::join(
                 'tagihans',
                 'pembayarans.tagihan_id',
                 '=',
                 'tagihans.id'
             )
-            ->where('pembayarans.status', 'accepted')
+            ->whereRaw('LOWER(pembayarans.status) = ?', ['accepted'])
             ->whereMonth('pembayarans.created_at', $bulan)
             ->whereYear('pembayarans.created_at', $tahun)
             ->sum('tagihans.jumlah');
 
-        // TOTAL TAGIHAN
+        /*
+        |--------------------------------------------------------------------------
+        | TOTAL TAGIHAN BULAN INI
+        |--------------------------------------------------------------------------
+        */
         $totalTagihan = Tagihan::whereMonth('created_at', $bulan)
             ->whereYear('created_at', $tahun)
             ->count();
 
-        // GRAFIK BULANAN (SETAHUN)
+        /*
+        |--------------------------------------------------------------------------
+        | DATA GRAFIK BULANAN (1 TAHUN)
+        |--------------------------------------------------------------------------
+        */
         $chartRaw = Pembayaran::join(
                 'tagihans',
                 'pembayarans.tagihan_id',
                 '=',
                 'tagihans.id'
             )
-            ->selectRaw('MONTH(pembayarans.created_at) bulan, SUM(tagihans.jumlah) total')
-            ->where('pembayarans.status', 'accepted')
+            ->selectRaw('
+                MONTH(pembayarans.created_at) AS bulan,
+                SUM(tagihans.jumlah) AS total
+            ')
+            ->whereRaw('LOWER(pembayarans.status) = ?', ['accepted'])
             ->whereYear('pembayarans.created_at', $tahun)
-            ->groupBy('bulan')
-            ->orderBy('bulan')
+            ->groupBy(DB::raw('MONTH(pembayarans.created_at)'))
+            ->orderBy(DB::raw('MONTH(pembayarans.created_at)'))
             ->get();
 
         $chartLabels = [];
-        $chartData = [];
+        $chartData   = [];
 
         for ($i = 1; $i <= 12; $i++) {
-            $chartLabels[] = \Carbon\Carbon::create()->month($i)->translatedFormat('F');
+            $chartLabels[] = Carbon::create()->month($i)->translatedFormat('F');
             $found = $chartRaw->firstWhere('bulan', $i);
-            $chartData[] = $found ? $found->total : 0;
+            $chartData[] = $found ? (int) $found->total : 0;
         }
 
-        // LAPORAN BULANAN (STEP 4.3)
+        /*
+        |--------------------------------------------------------------------------
+        | LAPORAN BULANAN (TABEL)
+        |--------------------------------------------------------------------------
+        */
         $laporanBulanan = Pembayaran::join(
                 'tagihans',
                 'pembayarans.tagihan_id',
@@ -64,37 +84,47 @@ class FinanceReportController extends Controller
                 'tagihans.id'
             )
             ->selectRaw('
-                MONTH(pembayarans.created_at) bulan,
-                YEAR(pembayarans.created_at) tahun,
-                SUM(tagihans.jumlah) total_pemasukan
+                MONTH(pembayarans.created_at) AS bulan,
+                YEAR(pembayarans.created_at) AS tahun,
+                SUM(tagihans.jumlah) AS total_pemasukan
             ')
-            ->where('pembayarans.status', 'accepted')
-            ->groupBy('bulan', 'tahun')
+            ->whereRaw('LOWER(pembayarans.status) = ?', ['accepted'])
+            ->groupBy(
+                DB::raw('MONTH(pembayarans.created_at)'),
+                DB::raw('YEAR(pembayarans.created_at)')
+            )
             ->orderBy('tahun', 'desc')
             ->orderBy('bulan', 'desc')
             ->get();
 
-        return view('admin.reports.finance', compact(
-            'totalPemasukan',
-            'totalTagihan',
-            'chartLabels',
-            'chartData',
-            'laporanBulanan'
-        ));
+        return view('admin.reports.finance', [
+            'totalPemasukan' => $totalPemasukan,
+            'totalTagihan'   => $totalTagihan,
+            'chartLabels'    => json_encode($chartLabels),
+            'chartData'      => json_encode($chartData),
+            'laporanBulanan' => $laporanBulanan,
+            'bulan'          => $bulan,
+            'tahun'          => $tahun,
+        ]);
     }
 
-    public function exportCsv(Request $request)
+    /*
+    |--------------------------------------------------------------------------
+    | EXPORT CSV
+    |--------------------------------------------------------------------------
+    */
+    public function exportCsv()
     {
         $filename = 'laporan_keuangan.csv';
 
         $data = Pembayaran::with('tagihan.pelanggan.user')
-            ->where('status', 'accepted')
+            ->whereRaw('LOWER(status) = ?', ['accepted'])
             ->orderBy('created_at', 'desc')
             ->get();
 
         $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => "attachment; filename=$filename",
+            'Content-Type'        => 'text/csv',
+            'Content-Disposition' => "attachment; filename={$filename}",
         ];
 
         $callback = function () use ($data) {
@@ -106,7 +136,7 @@ class FinanceReportController extends Controller
                     $row->created_at->format('d-m-Y'),
                     $row->tagihan->pelanggan->user->name ?? '-',
                     $row->tagihan->jumlah,
-                    $row->method,
+                    strtoupper($row->method),
                 ]);
             }
 
@@ -116,10 +146,15 @@ class FinanceReportController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
-    public function exportPdf(Request $request)
+    /*
+    |--------------------------------------------------------------------------
+    | EXPORT PDF
+    |--------------------------------------------------------------------------
+    */
+    public function exportPdf()
     {
         $pembayaran = Pembayaran::with('tagihan.pelanggan.user')
-            ->where('status', 'accepted')
+            ->whereRaw('LOWER(status) = ?', ['accepted'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -129,7 +164,7 @@ class FinanceReportController extends Controller
                 '=',
                 'tagihans.id'
             )
-            ->where('pembayarans.status', 'accepted')
+            ->whereRaw('LOWER(pembayarans.status) = ?', ['accepted'])
             ->sum('tagihans.jumlah');
 
         $pdf = Pdf::loadView('admin.reports.finance-pdf', [
