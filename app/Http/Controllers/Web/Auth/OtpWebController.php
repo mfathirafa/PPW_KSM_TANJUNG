@@ -3,68 +3,167 @@
 namespace App\Http\Controllers\Web\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Otp;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\User;
+use App\Models\Otp;
 
 class OtpWebController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | SEND OTP (CUSTOMER & ADMIN)
+    |--------------------------------------------------------------------------
+    */
     public function send(Request $request)
     {
         $request->validate([
-            'phone' => 'required|string'
+            'phone' => 'required',
+            'role'  => 'required|in:customer,admin',
         ]);
 
+        // 🔑 NORMALISASI NOMOR (WAJIB)
+        $phone = preg_replace('/^0/', '62', $request->phone);
+
+        // GENERATE OTP
         $otpCode = rand(100000, 999999);
 
-        User::firstOrCreate(
-            ['phone' => $request->phone],
-            ['role' => 'admin'] // atau customer tergantung halaman
+        // SIMPAN / UPDATE OTP
+        Otp::updateOrCreate(
+            ['phone' => $phone],
+            [
+                'code'       => $otpCode,
+                'expired_at' => now()->addMinutes(5),
+                'is_used'    => 0,
+            ]
         );
 
-        Otp::create([
-            'phone' => $request->phone,
-            'code' => $otpCode,
-            'expires_at' => Carbon::now()->addMinutes(3),
-        ]);
+        // ⚠️ DEMO ONLY (hapus kalau WA gateway aktif)
+        session()->flash('otp_demo', $otpCode);
 
-        // 🔥 PENTING: redirect ke halaman verifikasi
-        return redirect('/admin/verify-code?phone=' . $request->phone);
+        // REDIRECT SESUAI ROLE
+        if ($request->role === 'admin') {
+            return redirect()->route('admin.verify', ['phone' => $phone]);
+        }
+
+        return redirect()->route('user.verify', ['phone' => $phone]);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | SHOW VERIFY PAGE - CUSTOMER
+    |--------------------------------------------------------------------------
+    */
+    public function showUserVerify(Request $request)
+    {
+        abort_if(!$request->phone, 404);
 
-    public function verify(Request $request)
+        return view('user.auth.verify-code', [
+            'phone' => $request->phone,
+            'role'  => 'customer',
+        ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | SHOW VERIFY PAGE - ADMIN
+    |--------------------------------------------------------------------------
+    */
+    public function showAdminVerify(Request $request)
+    {
+        abort_if(!$request->phone, 404);
+
+        return view('admin.auth.verify-code', [
+            'phone' => $request->phone,
+            'role'  => 'admin',
+        ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | VERIFY OTP - CUSTOMER
+    |--------------------------------------------------------------------------
+    */
+    public function verifyUserOtp(Request $request)
     {
         $request->validate([
-            'phone' => 'required|string',
+            'phone' => 'required',
             'otp'   => 'required|digits:6',
         ]);
 
-        $otp = Otp::where('phone', $request->phone)
+        // 🔑 NORMALISASI ULANG (KRITIS)
+        $phone = preg_replace('/^0/', '62', $request->phone);
+
+        $otp = Otp::where('phone', $phone)
             ->where('code', $request->otp)
-            ->where('is_used', false)
+            ->where('expired_at', '>', now())
+            ->where('is_used', 0)
             ->latest()
             ->first();
 
-        if (!$otp || $otp->expires_at->isPast()) {
-            return back()->withErrors(['otp' => 'OTP tidak valid atau kadaluarsa']);
+        if (!$otp) {
+            return back()->withErrors([
+                'otp' => 'Kode OTP tidak valid atau sudah kadaluarsa'
+            ]);
         }
 
-        $user = User::where('phone', $request->phone)->firstOrFail();
+        $user = User::where('phone', $phone)
+            ->where('role', 'customer')
+            ->first();
 
-        // 🔥 LOGIN SESSION WEB
+        if (!$user) {
+            return back()->withErrors([
+                'otp' => 'Customer tidak terdaftar'
+            ]);
+        }
+
         Auth::login($user);
-
-        $otp->update(['is_used' => true]);
-
-        // 🔥 REDIRECT SESUAI ROLE
-        if ($user->role === 'admin') {
-            return redirect('/admin/dashboard');
-        }
+        $otp->update(['is_used' => 1]);
 
         return redirect('/dashboard');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | VERIFY OTP - ADMIN
+    |--------------------------------------------------------------------------
+    */
+    public function verifyAdminOtp(Request $request)
+    {
+        $request->validate([
+            'phone' => 'required',
+            'otp'   => 'required|digits:6',
+        ]);
+
+        // 🔑 NORMALISASI ULANG
+        $phone = preg_replace('/^0/', '62', $request->phone);
+
+        $otp = Otp::where('phone', $phone)
+            ->where('code', $request->otp)
+            ->where('expired_at', '>', now())
+            ->where('is_used', 0)
+            ->latest()
+            ->first();
+
+        if (!$otp) {
+            return back()->withErrors([
+                'otp' => 'Kode OTP tidak valid atau sudah kadaluarsa'
+            ]);
+        }
+
+        $admin = User::where('phone', $phone)
+            ->where('role', 'admin')
+            ->first();
+
+        if (!$admin) {
+            return back()->withErrors([
+                'otp' => 'Admin tidak terdaftar'
+            ]);
+        }
+
+        Auth::login($admin);
+        $otp->update(['is_used' => 1]);
+
+        return redirect('/admin/dashboard');
     }
 }

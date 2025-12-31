@@ -20,24 +20,38 @@
             <div class="card auth-card shadow-lg border-0">
                 <div class="card-body p-4 p-md-5 text-center">
 
+                    {{-- BACK --}}
+                    <a href="{{ url('/login') }}"
+                       class="position-absolute top-0 start-0 m-3 text-dark">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+
                     <h1 class="h2 fw-bold">Verification Code</h1>
                     <p class="text-muted mb-4">
                         Please enter the 6-digit code sent to your<br>
-                        Phone number
-                        <span class="phone-number">
-                            {{ request('phone') }}
-                        </span>
+                        Phone number<br>
+                        <strong>{{ request('phone') }}</strong>
                     </p>
 
-                    <form id="verifyOtpForm">
-                        <div class="d-flex justify-content-center mb-4">
-                            <input type="number" class="form-control otp-input" maxlength="1" inputmode="numeric">
-                            <input type="number" class="form-control otp-input" maxlength="1" inputmode="numeric">
-                            <input type="number" class="form-control otp-input" maxlength="1" inputmode="numeric">
-                            <input type="number" class="form-control otp-input" maxlength="1" inputmode="numeric">
-                            <input type="number" class="form-control otp-input" maxlength="1" inputmode="numeric">
-                            <input type="number" class="form-control otp-input" maxlength="1" inputmode="numeric">
+                    {{-- FORM VERIFY OTP --}}
+                    <form method="POST" action="{{ route('otp.verify.user') }}" id="verifyForm">
+                        @csrf
+
+                        {{-- PHONE --}}
+                        <input type="hidden" name="phone" value="{{ request('phone') }}">
+
+                        {{-- OTP INPUT --}}
+                        <div class="d-flex justify-content-center mb-4 gap-2">
+                            <input type="text" class="form-control otp-input text-center" maxlength="1" inputmode="numeric">
+                            <input type="text" class="form-control otp-input text-center" maxlength="1" inputmode="numeric">
+                            <input type="text" class="form-control otp-input text-center" maxlength="1" inputmode="numeric">
+                            <input type="text" class="form-control otp-input text-center" maxlength="1" inputmode="numeric">
+                            <input type="text" class="form-control otp-input text-center" maxlength="1" inputmode="numeric">
+                            <input type="text" class="form-control otp-input text-center" maxlength="1" inputmode="numeric">
                         </div>
+
+                        {{-- REAL OTP --}}
+                        <input type="hidden" name="otp" id="otp-value">
 
                         <div class="d-grid mb-3">
                             <button type="submit" class="btn btn-custom-green btn-lg fw-bold">
@@ -46,15 +60,25 @@
                         </div>
                     </form>
 
-                    <div class="text-center text-muted">
-                        <span>Didn't receive any code? </span>
-                        <a href="#" id="resend-link" class="fw-bold text-decoration-none" style="display:none;">
-                            Resend Again
-                        </a>
+                    {{-- ERROR --}}
+                    @if ($errors->any())
+                        <div class="alert alert-danger mt-3">
+                            {{ $errors->first() }}
+                        </div>
+                    @endif
+
+                    {{-- TIMER --}}
+                    <div class="text-center text-muted mt-3">
                         <span id="timer-text">
                             Request a new code in
-                            <span id="countdown" class="fw-bold">00:30s</span>
+                            <span id="countdown" class="fw-bold">00:30</span>
                         </span>
+                        <a href="{{ url('/login/customer/whatsapp') }}"
+                           id="resend-link"
+                           class="fw-bold text-decoration-none"
+                           style="display:none;">
+                            Resend Again
+                        </a>
                     </div>
 
                 </div>
@@ -64,18 +88,32 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 /* ================= OTP INPUT UX ================= */
 $('.otp-input').on('input', function () {
-    if (this.value.length === 1) {
+    this.value = this.value.replace(/[^0-9]/g, '');
+    if (this.value && $(this).next('.otp-input').length) {
         $(this).next('.otp-input').focus();
     }
 }).on('keydown', function (e) {
     if (e.key === 'Backspace' && !this.value) {
         $(this).prev('.otp-input').focus();
     }
+});
+
+/* ================= VALIDATE & MERGE OTP ================= */
+document.getElementById('verifyForm').addEventListener('submit', function (e) {
+    let otp = '';
+    document.querySelectorAll('.otp-input').forEach(i => otp += i.value);
+
+    if (!/^\d{6}$/.test(otp)) {
+        e.preventDefault();
+        alert('OTP harus 6 digit angka');
+        return;
+    }
+
+    document.getElementById('otp-value').value = otp;
 });
 
 /* ================= TIMER ================= */
@@ -86,7 +124,7 @@ const resendLink = document.getElementById('resend-link');
 
 const interval = setInterval(() => {
     time--;
-    countdown.textContent = '00:' + (time < 10 ? '0' : '') + time + 's';
+    countdown.textContent = '00:' + (time < 10 ? '0' : '') + time;
 
     if (time <= 0) {
         clearInterval(interval);
@@ -94,49 +132,6 @@ const interval = setInterval(() => {
         resendLink.style.display = 'inline';
     }
 }, 1000);
-
-/* ================= VERIFY OTP ================= */
-document.getElementById('verifyOtpForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    let otp = '';
-    document.querySelectorAll('.otp-input').forEach(i => otp += i.value);
-
-    if (!/^\d{6}$/.test(otp)) {
-        alert('OTP harus 6 digit');
-        return;
-    }
-
-    const phone = new URLSearchParams(window.location.search).get('phone');
-    if (!phone) {
-        alert('Nomor HP tidak ditemukan');
-        return;
-    }
-
-    const res = await fetch('/whatsapp/verify-otp', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({ phone, otp })
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-        alert(data.message || 'OTP salah');
-        return;
-    }
-
-    // 🔥 REDIRECT SESUAI ROLE (AMAN)
-    if (data.role === 'admin') {
-        window.location.href = '/admin/dashboard';
-    } else {
-        window.location.href = '/dashboard';
-    }
-});
 </script>
 
 </body>

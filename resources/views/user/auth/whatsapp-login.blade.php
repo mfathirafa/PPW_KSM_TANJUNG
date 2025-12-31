@@ -36,7 +36,7 @@
                     <form method="POST" action="/whatsapp/send-otp">
                         @csrf
 
-                        {{-- 🔒 WAJIB: ROLE CUSTOMER --}}
+                        {{-- 🔒 FIX: HARUS "type", BUKAN "role" --}}
                         <input type="hidden" name="role" value="customer">
 
                         <div class="input-group mb-3">
@@ -69,7 +69,7 @@
                         </div>
                     @endif
 
-                    {{-- DEMO ONLY (OPSIONAL) --}}
+                    {{-- DEMO ONLY --}}
                     @if(session('otp_demo'))
                         <div class="alert alert-warning mt-3">
                             OTP (Demo): <strong>{{ session('otp_demo') }}</strong>

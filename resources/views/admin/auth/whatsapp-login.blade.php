@@ -36,7 +36,7 @@
                     <form method="POST" action="/whatsapp/send-otp">
                         @csrf
 
-                        {{-- 🔒 PENTING: ROLE ADMIN --}}
+                        {{-- 🔒 ROLE ADMIN --}}
                         <input type="hidden" name="role" value="admin">
 
                         <div class="input-group mb-3">

@@ -25,7 +25,7 @@
                     </p>
 
                     {{-- FORM VERIFY --}}
-                    <form method="POST" action="/whatsapp/verify-otp">
+                    <form method="POST" action="{{ route('admin.verify-code') }}">
                         @csrf
 
                         {{-- phone WAJIB --}}
